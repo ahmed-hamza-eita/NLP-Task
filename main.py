@@ -1,4 +1,5 @@
 from sklearn.exceptions import UndefinedMetricWarning
+from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 
 from data_preprocessing import load_data, drop_columns, apply_preprocessing, save_to_file
@@ -69,8 +70,7 @@ print(f"Accuracy: {rf_accuracy}")
 # print("Classification Report:")
 # print(rf_report)
 '''
-best_model = max([('Naive Bayes', nb_accuracy), ('SVM', svm_accuracy), ('Random Forest', rf_accuracy)],
-                 key=lambda x: x[1])
+
 
 classifiers = [('Naive Bayes', nb_classifier), ('SVM', svm_classifier), ('Random Forest', rf_classifier),
                ('Decision Tree', dt_classifier)]
@@ -79,7 +79,13 @@ for classifier_name, classifier in classifiers:
     accuracy, report = train_and_evaluate_model(X_train, X_test, y_train, y_test, classifier)
     print(f"\n{classifier_name}:")
     print(f"Accuracy: {accuracy}")
+
+    predictions = classifier.predict(X_test)
+    conf_matrix = confusion_matrix(y_test, predictions)
+    print(f"Confusion Matrix:\n{conf_matrix}")
     # print("Classification Report:")
     # print(report)
 
+best_model = max([('Naive Bayes', nb_accuracy), ('SVM', svm_accuracy), ('Random Forest', rf_accuracy)],
+                 key=lambda x: x[1])
 print(f"\nBest Model: {best_model[0]}")
